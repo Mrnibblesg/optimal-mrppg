@@ -1,3 +1,9 @@
+# README
+This is a fork of the original work because it was old and needed to be fixed for new versions of gurobi (tested on v13.0.1)!
+This includes a makefile for building. Make sure gurobi is installed and configured, then change the paths to match your local gurobi installation.
+Once everything is configured and your paths are correct, simply run make, then make run to run an example.
+
+# Original README
 ### Optimal Multi-Robot Path Planning on Graphs
 
 Source code used in the following work 
@@ -11,7 +17,7 @@ Latest manuscript: https://arxiv.org/pdf/1204.3830v4.pdf
 
 Gurobi (6.5+): http://www.gurobi.com/
 
-###Description
+### Description
 
 Here you will find the sources/binaries of the code in the paper containing a simple API. Due to multiple requests, I am releasing the source code in a rather raw form without documentation so use with discretion. The source is slightly newer than the binary release. To use the binary/API, you will need an x64 machine with 4-8GB memory, a 64bit JRE/JDK. You will also need to have an appropriate 64bit version of Gurobi installed (an academic license is free to obtain). Then you need to find the gurobi.jar and make sure that the Gurobi binaries are on your system path. 
 
