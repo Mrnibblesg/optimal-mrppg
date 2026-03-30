@@ -16,7 +16,7 @@ compile:
 run:
 	java -cp "$(BIN_DIR):$(GUROBI_JAR)" \
 		 -Djava.library.path=$(GUROBI_LIB) \
-		 projects.multipath.ILP.Main 1
+		 projects.multipath.Server.Server
 
 clean:
 	rm -rf $(BIN_DIR)
