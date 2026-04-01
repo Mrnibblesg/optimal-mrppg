@@ -25,7 +25,7 @@ $(JAR): $(SOURCES) $(PROTO_DEF)
 		-sourcepath $(SRC_DIR) \
 		$(SOURCES)
 	@echo "Main-Class: $(MAIN_CLASS)" > $(MANIFEST)
-	@echo "Class-Path: $(GUROBI_JAR) $(PROTOBUF_JAR)" >> $(MANIFEST)
+	@echo "Class-Path: $(GUROBI_JAR) $(abspath $(PROTOBUF_JAR))" >> $(MANIFEST)
 	@echo "" >> $(MANIFEST)
 	jar -cfm $(JAR) $(MANIFEST) -C $(BUILD_DIR) .
 	@echo "Compilation complete: $(JAR)"
