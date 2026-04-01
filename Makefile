@@ -20,7 +20,8 @@ compile:
 run:
 	java -cp "$(BIN_DIR):$(GUROBI_JAR):$(PROTOBUF_JAR)" \
 		 -Djava.library.path=$(GUROBI_LIB) \
-		 projects.multipath.Server.Server
+		 projects.multipath.Server.Server \
+		 "Arg 1" "Arg 2, Hello World!" 3
 
 clean:
 	rm -rf $(BIN_DIR)
