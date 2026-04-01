@@ -1,5 +1,7 @@
 GUROBI_JAR = /opt/gurobi1301/linux64/lib/gurobi.jar
 GUROBI_LIB = /opt/gurobi1301/linux64/lib
+
+PROTO_DEF = multiagent-pathfinding-protobuf/problem.proto
 PROTOBUF_JAR = ./lib/protobuf-java-4.34.1.jar
 
 SRC_DIR = source/
@@ -13,10 +15,11 @@ MAIN_CLASS = projects.multipath.Server.Server
 # Find all java files in source
 SOURCES := $(shell find $(SRC_DIR) -name "*.java")
 
-all: compile
+all: $(JAR)
 
-compile:
+$(JAR): $(SOURCES) $(PROTO_DEF)
 	@mkdir -p $(BIN_DIR) $(BUILD_DIR)
+	protoc --java_out=$(SRC_DIR) $(PROTO_DEF)
 	javac -cp "$(GUROBI_JAR):$(PROTOBUF_JAR)" \
 		-d $(BUILD_DIR) \
 		-sourcepath $(SRC_DIR) \
@@ -27,7 +30,7 @@ compile:
 	jar -cfm $(JAR) $(MANIFEST) -C $(BUILD_DIR) .
 	@echo "Compilation complete: $(JAR)"
 
-run: compile
+run: $(JAR)
 	java -jar $(JAR) "Arg 1" "Arg 2, Hello World!" 3
 
 clean:
