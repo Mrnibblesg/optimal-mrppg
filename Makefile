@@ -31,7 +31,7 @@ $(JAR): $(SOURCES) $(PROTO_DEF)
 	@echo "Compilation complete: $(JAR)"
 
 run: $(JAR)
-	java -jar $(JAR) "Arg 1" "Arg 2, Hello World!" 3
+	java -jar $(JAR) 1 "Arg 2, Hello World!" 3
 
 clean:
 	rm -rf $(BIN_DIR) $(BUILD_DIR) 

@@ -1,17 +1,8 @@
 package projects.multipath.Server;
 
-import projects.multipath.ILP.MultiagentGraphSolverGurobiTime;
-
-// import generated protobuf classes
-import projects.multipath.protos.Problem;
-import projects.multipath.protos.Assignment;
-import projects.multipath.protos.Node;
-
-// Start server with a thread pool executor.
-// accept() connections and submit each to the pool.
-// Each worker handles one problem at a time.
-// Response goes back on the same connection the worker holds.
-
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.net.ServerSocket;
 
 // This server should be started by the parameter sweep script! It runs throughout the duration of the sweep if the parameter sweep contains any centralized strategy combinations.
 // The server is turned off once the parameter sweep finishes.
@@ -19,12 +10,25 @@ import projects.multipath.protos.Node;
 // Running on a more powerful server? Increase the number of workers for the thread pool.
 public class Server{
     public static void main(String[] args){
-        System.out.println("Supplied arguments:");
-        for (int i = 0; i < args.length; i++){
-            System.out.println(i + ": " + args[i]);
+        int workerThreads = Integer.parseInt(args[0]);
+        int port = 55555;
+
+        ExecutorService pool = Executors.newFixedThreadPool(workerThreads);
+
+        try(ServerSocket server = new ServerSocket(port)){
+            String addr = server.getInetAddress().toString();
+            System.out.println("Optimal pathfinding server started at " + addr + " on port " + port);
+            while(true){
+                pool.execute(new Handler(server.accept()));
+            }
+        }
+        catch(Exception e){
+            System.err.println("Error encountered. Optimal pathfinding server shutting down.");
+            pool.shutdown();
         }
 
-        //Read from protobuf queue and start jobs
-        System.out.println("Hello World!");
+
     }
+
 }
+
