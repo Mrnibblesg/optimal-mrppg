@@ -1,8 +1,14 @@
 GUROBI_JAR = /opt/gurobi1301/linux64/lib/gurobi.jar
 GUROBI_LIB = /opt/gurobi1301/linux64/lib
 PROTOBUF_JAR = ./lib/protobuf-java-4.34.1.jar
-SRC_DIR = source
-BIN_DIR = bin
+
+SRC_DIR = source/
+BIN_DIR = bytecode/
+BUILD_DIR = build/
+
+MANIFEST = $(BIN_DIR)manifest.txt
+JAR = $(BIN_DIR)server.jar
+MAIN_CLASS = projects.multipath.Server.Server
 
 # Find all java files in source
 SOURCES := $(shell find $(SRC_DIR) -name "*.java")
@@ -10,18 +16,21 @@ SOURCES := $(shell find $(SRC_DIR) -name "*.java")
 all: compile
 
 compile:
-	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(BIN_DIR) $(BUILD_DIR)
 	javac -cp "$(GUROBI_JAR):$(PROTOBUF_JAR)" \
-		-d $(BIN_DIR) \
+		-d $(BUILD_DIR) \
 		-sourcepath $(SRC_DIR) \
 		$(SOURCES)
-	@echo "Compilation complete. Files are in $(BIN_DIR)"
+	@echo "Main-Class: $(MAIN_CLASS)" > $(MANIFEST)
+	@echo "Class-Path: $(GUROBI_JAR) $(PROTOBUF_JAR)" >> $(MANIFEST)
+	@echo "" >> $(MANIFEST)
+	jar -cfm $(JAR) $(MANIFEST) -C $(BUILD_DIR) .
+	@echo "Compilation complete: $(JAR)"
 
 run:
 	java -cp "$(BIN_DIR):$(GUROBI_JAR):$(PROTOBUF_JAR)" \
-		 -Djava.library.path=$(GUROBI_LIB) \
 		 projects.multipath.Server.Server \
 		 "Arg 1" "Arg 2, Hello World!" 3
 
 clean:
-	rm -rf $(BIN_DIR)
+	rm -rf $(BIN_DIR) $(BUILD_DIR) 
