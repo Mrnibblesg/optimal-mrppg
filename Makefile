@@ -27,10 +27,8 @@ compile:
 	jar -cfm $(JAR) $(MANIFEST) -C $(BUILD_DIR) .
 	@echo "Compilation complete: $(JAR)"
 
-run:
-	java -cp "$(BIN_DIR):$(GUROBI_JAR):$(PROTOBUF_JAR)" \
-		 projects.multipath.Server.Server \
-		 "Arg 1" "Arg 2, Hello World!" 3
+run: compile
+	java -jar $(JAR) "Arg 1" "Arg 2, Hello World!" 3
 
 clean:
 	rm -rf $(BIN_DIR) $(BUILD_DIR) 
