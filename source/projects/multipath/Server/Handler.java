@@ -5,8 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-
-import projects.multipath.ILP.MultiagentGraphSolverGurobiTime;
+import projects.multipath.ILP.PuzzleSolver;
 import projects.multipath.advanced.Graph;
 import projects.multipath.advanced.Problem;
 //generated protobuf classes
@@ -28,7 +27,7 @@ public class Handler implements Runnable{
             Instance problem_msg = Instance.parseFrom(istream);
             Problem prob = this.messageToProblem(problem_msg);
 
-            
+            int[][] paths = PuzzleSolver.solve(prob, -1);
 
             Assignment testResponse = Assignment.newBuilder()
                 .setRobotId(30)
@@ -41,7 +40,7 @@ public class Handler implements Runnable{
 
         }
         catch(Exception e){
-            System.err.println("Error encountered in runner thread: ");
+            System.err.println("ERROR encountered in runner thread: ");
             e.printStackTrace();
         }
     }
