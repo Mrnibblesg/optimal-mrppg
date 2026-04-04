@@ -61,6 +61,8 @@ public class Handler implements Runnable{
             starts[id] = a.getStartId();
             goals[id] = a.getFinishId();
         }
+        
+        g.finishBuildingGraph();
 
         Problem prob = new Problem();
         prob.graph = g;
