@@ -4,14 +4,20 @@ import java.net.Socket;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 import projects.multipath.ILP.PuzzleSolver;
 import projects.multipath.advanced.Graph;
 import projects.multipath.advanced.Problem;
+
 //generated protobuf classes
 import projects.multipath.protos.Instance;
 import projects.multipath.protos.Assignment;
 import projects.multipath.protos.Node;
+
+import projects.multipath.protos.Solution;
+import projects.multipath.protos.Timestep;
+import projects.multipath.protos.Position;
 
 public class Handler implements Runnable{
     private final Socket s;
@@ -28,15 +34,10 @@ public class Handler implements Runnable{
             Problem prob = this.messageToProblem(problem_msg);
 
             int[][] paths = PuzzleSolver.solve(prob, -1);
-
-            Assignment testResponse = Assignment.newBuilder()
-                .setRobotId(30)
-                .setStartId(40)
-                .setFinishId(50)
-                .build();
-
+            
+            Solution solMsg = solutionToMessage(paths);
             OutputStream ostream = this.s.getOutputStream();
-            testResponse.writeTo(ostream);
+            solMsg.writeTo(ostream);
 
         }
         catch(Exception e){
@@ -61,7 +62,7 @@ public class Handler implements Runnable{
             starts[id] = a.getStartId();
             goals[id] = a.getFinishId();
         }
-        
+
         g.finishBuildingGraph();
 
         Problem prob = new Problem();
@@ -71,6 +72,31 @@ public class Handler implements Runnable{
         prob.sg[1] = goals;
 
         return prob;
+    }
+
+    private Solution solutionToMessage(int[][] paths){
+	//int paths[][] = new int[starts.length][timeSteps + 1];
+        int robots = paths.length;
+        int maxTime = paths[0].length;
+        
+        Solution.Builder sol = Solution.newBuilder()
+            .setStatus(0);
+        
+
+        for (int t = 0; t < maxTime; t++){
+            Timestep.Builder ts = Timestep.newBuilder()
+                .setTime(t);
+            for (int r = 0; r < robots; r++){
+                ts.addPositions(
+                    Position.newBuilder()
+                        .setRobotId(r)
+                        .setNodeId(paths[r][t])
+                        .build());
+            }
+            sol.addTimesteps(ts.build());
+        }
+
+        return sol.build();
     }
 }
 
