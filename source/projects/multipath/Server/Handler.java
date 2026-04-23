@@ -33,8 +33,12 @@ public class Handler implements Runnable{
             Instance problem_msg = Instance.parseFrom(istream);
             Problem prob = this.messageToProblem(problem_msg);
 
+            long startTime = System.currentTimeMillis();
             int[][] paths = PuzzleSolver.solve(prob, -1);
-            
+            long endTime = System.currentTimeMillis();
+
+            System.out.println("Total computation time: " + (endTime - startTime) + "ms");
+
             Solution solMsg = solutionToMessage(paths);
             OutputStream ostream = this.s.getOutputStream();
             solMsg.writeTo(ostream);
